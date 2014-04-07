@@ -1,0 +1,4 @@
+#!/bin/sh
+unset DISPLAY
+ARG="$@"
+Rscript -e 'help('\"$ARG\"')' | cat
