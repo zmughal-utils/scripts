@@ -1,0 +1,5 @@
+#!/bin/sh
+unset DISPLAY
+ARG="$@"
+swipl -g 'help('$ARG'),halt' | cat
+echo
