@@ -1,0 +1,6 @@
+implemented-in:
+  - sh
+depends:
+  debian-apt:
+    - ipython3
+    - coreutils
