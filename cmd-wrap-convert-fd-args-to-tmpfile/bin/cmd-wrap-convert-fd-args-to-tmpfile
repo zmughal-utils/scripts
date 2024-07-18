@@ -1,0 +1,51 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Getopt::Long;
+use File::Temp qw(tempfile tempdir);
+use File::Copy qw(copy);
+use File::Spec;
+
+# Parse command line options
+my $suffixes_arg;
+GetOptions("suffixes=s" => \$suffixes_arg);
+
+# Split the suffixes argument into an array
+my @suffixes = split(/,/, $suffixes_arg // '');
+
+# Create a temporary directory
+my $tempdir = tempdir(CLEANUP => 1);
+
+# Read the original command from the arguments
+my @original_command = @ARGV;
+
+# Function to convert /dev/fd/N to temporary files
+sub convert_fd_to_tempfile {
+    my ($fd, $suffix) = @_;
+
+    # Create a temporary file in the temporary directory
+    my $tempfile = File::Spec->catfile($tempdir, "fd_${fd}${suffix}");
+    open my $fh, '>', $tempfile or die "Failed to create temporary file $tempfile: $!";
+
+    # Copy the contents of the file descriptor to the temporary file
+    copy("/dev/fd/$fd", $tempfile) or die "Failed to copy /dev/fd/$fd to $tempfile: $!";
+
+    return $tempfile;
+}
+
+# Iterate over the command arguments and replace /dev/fd/N with temporary files
+my @new_command;
+my $suffix_index = 0;
+foreach my $arg (@original_command) {
+    if ($arg =~ m|^/dev/fd/(\d+)$|) {
+        my $fd = $1;
+        my $suffix = $suffixes[$suffix_index] // '';
+        push @new_command, convert_fd_to_tempfile($fd, $suffix);
+        $suffix_index++ if $suffix_index < $#suffixes;
+    } else {
+        push @new_command, $arg;
+    }
+}
+
+# Execute the new command and exit with its status
+exit system(@new_command);
