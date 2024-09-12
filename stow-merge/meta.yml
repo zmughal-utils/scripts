@@ -1,0 +1,4 @@
+depends:
+  debian-apt:
+    - git
+    - stow
