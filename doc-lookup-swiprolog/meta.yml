@@ -2,5 +2,5 @@ implemented-in:
   - sh
 depends:
   debian-apt:
-    - r-base-core
+    - swi-prolog-core
     - coreutils

@@ -1,4 +1,8 @@
+implemented-in:
+  - bash
 depends:
   debian-apt:
     - git
     - stow
+    - coreutils
+    - bash
