@@ -1,0 +1,5 @@
+implemented-in:
+  - perl
+depends:
+  debian-apt:
+    - perl
