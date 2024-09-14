@@ -1,5 +1,6 @@
 implemented-in:
   - sh
+previous-name: R_doc
 depends:
   debian-apt:
     - r-base-core

@@ -1,5 +1,6 @@
 implemented-in:
   - sh
+previous-name: swipl_doc
 depends:
   debian-apt:
     - swi-prolog-core
