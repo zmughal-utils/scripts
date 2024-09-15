@@ -1,0 +1,7 @@
+implemented-in:
+  - sh
+depends:
+  debian-apt:
+    - vim
+    - sed
+    - coreutils

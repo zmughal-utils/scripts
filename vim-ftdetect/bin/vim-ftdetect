@@ -1,0 +1,20 @@
+#!/bin/sh
+
+[ $# -eq 1 ] || exit 1
+[ -f "$1"  ] || exit 1
+
+vim -esnN -R -i NONE \
+	--clean \
+	-Z \
+	-c '
+		set rtp+=$HOME/.vim
+		runtime! scripts.vim
+		runtime! filetype.vim
+		runtime! ftdetect/*.vim
+		set rtp-=$HOME/.vim
+		e!
+		set ft?
+		quit
+	' \
+	"$1" \
+	| sed 's/^ *filetype=//'
