@@ -1,0 +1,11 @@
+#!/bin/sh
+
+git show --format='format:%H' --no-patch  "$@" \
+	| parallel "$(cat <<'EOF'
+		export COMMIT={};
+		git show --format='' --name-only -z $COMMIT \
+			| perl -MEnv=COMMIT -p0e '$_=qq{$COMMIT:$_}'
+EOF
+	)" \
+	| parallel -0 'git show {} | wc -l' \
+	| sort -n | tail -1
