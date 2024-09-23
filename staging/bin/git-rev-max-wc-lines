@@ -1,11 +1,6 @@
 #!/bin/sh
 
-git show --format='format:%H' --no-patch  "$@" \
-	| parallel "$(cat <<'EOF'
-		export COMMIT={};
-		git show --format='' --name-only -z $COMMIT \
-			| perl -MEnv=COMMIT -p0e '$_=qq{$COMMIT:$_}'
-EOF
-	)" \
+git show --diff-filter=d --format='tformat:%n%n%H' -z --name-only "$@" \
+	| perl -00 -pe '($C, $Fs) = split /\0\n/s, $_; $_ = join "", map { qq<$C:$_\0> } grep length, split /\0/, $Fs' \
 	| parallel -0 'git show {} | wc -l' \
 	| awk 'NR==1 || $1>max {max=$1} END {print max}'
