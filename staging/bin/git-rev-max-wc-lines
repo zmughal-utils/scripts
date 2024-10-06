@@ -1,4 +1,5 @@
 #!/bin/sh
+# SPDX-License-Identifier: CC0-1.0
 
 git show --diff-filter=d --format='tformat:%n%n%H' -z --name-only "$@" \
 	| perl -00 -pe '
