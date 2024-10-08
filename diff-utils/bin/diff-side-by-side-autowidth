@@ -1,0 +1,26 @@
+#!/usr/bin/env perl
+# SPDX-License-Identifier: CC0-1.0
+
+use strict;
+use warnings;
+
+use Text::VisualWidth::PP;
+use List::Util qw(max);
+use Path::Tiny;
+
+die "Not enough arguments" unless @ARGV >= 2;
+my @files = splice @ARGV, -2, 2;
+
+my $max_width = max
+	map Text::VisualWidth::PP::width($_),
+	map { path($_)->lines_utf8 }
+	@files;
+
+my $columns  = $max_width * 2 + 2;
+
+exit system(
+	qw(diff -y),
+	qw(-W), $columns,
+	@ARGV,
+	@files,
+);
