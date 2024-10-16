@@ -1,0 +1,9 @@
+implemented-in:
+  - perl
+depends:
+  debian-apt:
+    - perl
+  perl-cpan:
+    - 'Text::VisualWidth::PP'
+    - 'List::Util'
+    - 'Path::Tiny'
