@@ -1,9 +1,19 @@
-implemented-in:
-  - perl
-depends:
-  debian-apt:
-    - perl
-  perl-cpan:
-    - 'Text::VisualWidth::PP'
-    - 'List::Util'
-    - 'Path::Tiny'
+components:
+  - files:
+      - bin/diff-side-by-side-autowidth
+    implemented-in:
+      - perl
+    depends:
+      debian-apt:
+        - perl
+      perl-cpan:
+        - 'Text::VisualWidth::PP'
+        - 'List::Util'
+        - 'Path::Tiny'
+  - files:
+      - bin/filter-diff-only-changes
+    implemented-in:
+      - sh
+    depends:
+      debian-apt:
+        - coreutils
