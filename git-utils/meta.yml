@@ -1,0 +1,12 @@
+components:
+  - files:
+      - bin/git-rev-max-wc-lines
+    implemented-in:
+      - sh
+    depends:
+      debian-apt:
+        - git
+        - perl
+        - parallel
+        - awk
+        - coreutils
