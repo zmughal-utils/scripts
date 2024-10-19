@@ -1,0 +1,11 @@
+components:
+  - files:
+      - bin/sqlite-fts-compat.pl
+    implemented-in:
+      - perl
+    depends:
+      debian-apt:
+        - perl
+      perl-cpan:
+        - 'DBI'
+        - 'DBD::SQLite'
