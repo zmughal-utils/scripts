@@ -14,5 +14,4 @@ prior to v2.42.0
 
 [^git-log-commit-diff-no-index-named-pipes]: [diff --no-index: support reading from named pipes · git/git@1e3f265 · GitHub](https://github.com/git/git/commit/1e3f26542a6ecd3006c2c0d5ccc0bae4a700f7e5)
 
-[^git-relnotes-diff-no-index-named-pipes]:
-[Git v2.42 Release Notes: `git diff --no-index`](https://github.com/git/git/blob/v2.42.0/Documentation/RelNotes/2.42.0.txt#L25-L27).
+[^git-relnotes-diff-no-index-named-pipes]: [Git v2.42 Release Notes: `git diff --no-index`](https://github.com/git/git/blob/v2.42.0/Documentation/RelNotes/2.42.0.txt#L25-L27).
