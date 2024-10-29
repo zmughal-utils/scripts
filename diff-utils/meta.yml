@@ -11,7 +11,8 @@ components:
         - 'List::Util'
         - 'Path::Tiny'
   - files:
-      - bin/filter-diff-only-changes
+      - bin/diff-grep-linewise-changes
+    previous-name: filter-diff-only-changes
     implemented-in:
       - sh
     depends:
