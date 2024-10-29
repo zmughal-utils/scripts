@@ -24,12 +24,13 @@ my @original_command = @ARGV;
 sub convert_fd_to_tempfile {
     my ($fd, $suffix) = @_;
 
+    (my $clean_name = $fd) =~ s/[^A-Za-z0-9\-\.]/_/g;
     # Create a temporary file in the temporary directory
-    my $tempfile = File::Spec->catfile($tempdir, "fd_${fd}${suffix}");
+    my $tempfile = File::Spec->catfile($tempdir, "fd_${clean_name}${suffix}");
     open my $fh, '>', $tempfile or die "Failed to create temporary file $tempfile: $!";
 
-    # Copy the contents of the file descriptor to the temporary file
-    copy("/dev/fd/$fd", $tempfile) or die "Failed to copy /dev/fd/$fd to $tempfile: $!";
+    # Copy the contents of the FIFO to the temporary file
+    copy($fd, $tempfile) or die "Failed to copy $fd to $tempfile: $!";
 
     return $tempfile;
 }
@@ -38,8 +39,8 @@ sub convert_fd_to_tempfile {
 my @new_command;
 my $suffix_index = 0;
 foreach my $arg (@original_command) {
-    if ($arg =~ m|^/dev/fd/(\d+)$|) {
-        my $fd = $1;
+    if ($arg =~ m|^/dev/fd/\d+$| || -p $arg) {
+        my $fd = $arg;
         my $suffix = $suffixes[$suffix_index] // '';
         push @new_command, convert_fd_to_tempfile($fd, $suffix);
         $suffix_index++ if $suffix_index < $#suffixes;
