@@ -1,3 +1,5 @@
 -t $HOME
 --ignore=meta\.ya?ml
 --ignore=README\.md
+# Vim swap files
+--ignore=\..*\.sw.?
