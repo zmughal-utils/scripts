@@ -1,4 +1,6 @@
 #!/bin/sh
 
+set -eu
+
 export FILE="$1"
 echo '.' | fzf --print-query --preview "cat \"$FILE\" | jq {q}"
