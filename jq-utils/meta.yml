@@ -1,0 +1,10 @@
+components:
+  - files:
+      - bin/jq-fzf
+    implemented-in:
+      - sh
+    depends:
+      debian-apt:
+        - jq
+        - fzf
+        - coreutils
