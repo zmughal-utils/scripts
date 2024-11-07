@@ -12,6 +12,24 @@ prior to v2.42.0
 [^git-relnotes-diff-no-index-named-pipes]
 .
 
+Example:
+```bash
+function my_diff() {
+    # NOTE: Currently must use `--` to ensure that remaining
+    # `--opts` are not parsed.
+    cmd-wrap-convert-fd-args-to-tmpfile -- \
+        git diff --no-index --word-diff    \
+            <( cat section/$1.tex          \
+             | pandoc -f latex -t markdown \
+             | filter-fix-markdown         \
+             )                             \
+            <( cat markdown/$1.md          \
+             | filter-fix-markdown         \
+             )                             ;
+}
+
+```
+
 [^git-log-commit-diff-no-index-named-pipes]: [diff --no-index: support reading from named pipes · git/git@1e3f265 · GitHub](https://github.com/git/git/commit/1e3f26542a6ecd3006c2c0d5ccc0bae4a700f7e5)
 
 [^git-relnotes-diff-no-index-named-pipes]: [Git v2.42 Release Notes: `git diff --no-index`](https://github.com/git/git/blob/v2.42.0/Documentation/RelNotes/2.42.0.txt#L25-L27).
