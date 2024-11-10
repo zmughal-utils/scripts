@@ -8,11 +8,10 @@ use File::Copy qw(copy);
 use File::Spec;
 
 # Parse command line options
-my $suffixes_arg;
-GetOptions("suffixes=s" => \$suffixes_arg);
+Getopt::Long::Configure( qw(pass_through) );
 
-# Split the suffixes argument into an array
-my @suffixes = split(/,/, $suffixes_arg // '');
+my @suffixes;
+GetOptions("suffix=s" => \@suffixes);
 
 # Create a temporary directory
 my $tempdir = tempdir(CLEANUP => 1);
