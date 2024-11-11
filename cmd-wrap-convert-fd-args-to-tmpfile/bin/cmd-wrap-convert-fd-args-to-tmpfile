@@ -13,6 +13,9 @@ Getopt::Long::Configure( qw(pass_through) );
 my @suffixes;
 GetOptions("suffix=s" => \@suffixes);
 
+# remove option list terminator
+shift @ARGV if @ARGV && $ARGV[0] eq '--';
+
 # Create a temporary directory
 my $tempdir = tempdir(CLEANUP => 1);
 
