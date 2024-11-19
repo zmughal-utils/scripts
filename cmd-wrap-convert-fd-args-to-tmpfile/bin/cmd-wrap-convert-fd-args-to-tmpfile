@@ -22,6 +22,8 @@ my $tempdir = tempdir(CLEANUP => 1);
 # Read the original command from the arguments
 my @original_command = @ARGV;
 
+exit 1 unless @original_command;
+
 # Function to convert /dev/fd/N to temporary files
 sub convert_fd_to_tempfile {
     my ($fd, $suffix) = @_;
