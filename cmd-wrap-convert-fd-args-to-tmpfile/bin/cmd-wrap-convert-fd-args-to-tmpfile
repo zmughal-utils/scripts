@@ -16,11 +16,11 @@ GetOptions("suffix=s" => \@suffixes);
 # remove option list terminator
 shift @ARGV if @ARGV && $ARGV[0] eq '--';
 
-# Create a temporary directory
-my $tempdir = tempdir(CLEANUP => 1);
-
 # Read the original command from the arguments
 my @original_command = @ARGV;
+
+# Create a temporary directory
+my $tempdir = tempdir(CLEANUP => 1);
 
 exit 1 unless @original_command;
 
