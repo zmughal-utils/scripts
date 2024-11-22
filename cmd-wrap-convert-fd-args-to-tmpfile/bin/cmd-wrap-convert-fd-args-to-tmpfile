@@ -8,7 +8,7 @@ use File::Copy qw(copy);
 use File::Spec;
 
 # Parse command line options
-Getopt::Long::Configure( qw(pass_through) );
+Getopt::Long::Configure( qw(auto_help pass_through) );
 
 my @suffixes;
 GetOptions("suffix=s" => \@suffixes);
@@ -55,3 +55,16 @@ foreach my $arg (@original_command) {
 
 # Execute the new command and exit with its status
 exit system(@new_command);
+__END__
+
+=pod
+
+=head1 SYNOPSIS
+
+cmd-wrap-convert-fd-args-to-tmpfile [options] command...
+
+Options:
+
+  --suffix
+
+=cut
