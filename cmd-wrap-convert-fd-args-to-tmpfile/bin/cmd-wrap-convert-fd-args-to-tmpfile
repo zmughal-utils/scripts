@@ -6,12 +6,17 @@ use Getopt::Long;
 use File::Temp qw(tempfile tempdir);
 use File::Copy qw(copy);
 use File::Spec;
+use JSON::PP qw(encode_json);
 
 # Parse command line options
 Getopt::Long::Configure( qw(auto_help pass_through) );
 
 my @suffixes;
-GetOptions("suffix=s" => \@suffixes);
+my $dry_run;
+GetOptions(
+    "suffix=s" => \@suffixes,
+    "dry-run"  => \$dry_run,
+);
 
 # remove option list terminator
 shift @ARGV if @ARGV && $ARGV[0] eq '--';
@@ -20,7 +25,7 @@ shift @ARGV if @ARGV && $ARGV[0] eq '--';
 my @original_command = @ARGV;
 
 # Create a temporary directory
-my $tempdir = tempdir(CLEANUP => 1);
+my $tempdir = $dry_run ? '[TEMP DIR]' : tempdir(CLEANUP => 1);
 
 exit 1 unless @original_command;
 
@@ -31,10 +36,13 @@ sub convert_fd_to_tempfile {
     (my $clean_name = $fd) =~ s/[^A-Za-z0-9\-\.]/_/g;
     # Create a temporary file in the temporary directory
     my $tempfile = File::Spec->catfile($tempdir, "fd_${clean_name}${suffix}");
-    open my $fh, '>', $tempfile or die "Failed to create temporary file $tempfile: $!";
 
-    # Copy the contents of the FIFO to the temporary file
-    copy($fd, $tempfile) or die "Failed to copy $fd to $tempfile: $!";
+    unless( $dry_run ) {
+        open my $fh, '>', $tempfile or die "Failed to create temporary file $tempfile: $!";
+
+        # Copy the contents of the FIFO to the temporary file
+        copy($fd, $tempfile) or die "Failed to copy $fd to $tempfile: $!";
+    }
 
     return $tempfile;
 }
@@ -54,7 +62,11 @@ foreach my $arg (@original_command) {
 }
 
 # Execute the new command and exit with its status
-exit system(@new_command);
+if( $dry_run ) {
+    print encode_json({ command => \@new_command }), "\n";
+} else {
+    exit system(@new_command);
+}
 __END__
 
 =pod
@@ -66,5 +78,7 @@ cmd-wrap-convert-fd-args-to-tmpfile [options] command...
 Options:
 
   --suffix
+
+  --dry-run
 
 =cut
