@@ -4,5 +4,5 @@
 git rev-parse && cd "$(git rev-parse --show-toplevel)"
 
 for i in ../merge/:all ../merge/$HOSTNAME; do
-	[ -d $i ] && stow --target . --dir $i .
+	[ -d $i ] && stow --target . --dir $i "$@" .
 done
