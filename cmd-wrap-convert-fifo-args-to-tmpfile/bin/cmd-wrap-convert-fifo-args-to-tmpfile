@@ -73,7 +73,7 @@ __END__
 
 =head1 SYNOPSIS
 
-cmd-wrap-convert-fd-args-to-tmpfile [options] command...
+cmd-wrap-convert-fifo-args-to-tmpfile [options] command...
 
 Options:
 

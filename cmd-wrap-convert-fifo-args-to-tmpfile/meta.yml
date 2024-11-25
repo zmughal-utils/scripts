@@ -1,0 +1,8 @@
+implemented-in:
+  - perl
+previous-name:
+  - convert-fd-args-to-tmpfile
+  - cmd-wrap-convert-fd-args-to-tmpfile
+depends:
+  debian-apt:
+    - perl

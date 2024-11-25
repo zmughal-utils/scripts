@@ -8,7 +8,7 @@ use IPC::System::Simple qw(capturex systemx);
 use String::ShellQuote;
 use JSON::PP qw(decode_json);
 
-use constant CMD_NAME => 'cmd-wrap-convert-fd-args-to-tmpfile';
+use constant CMD_NAME => 'cmd-wrap-convert-fifo-args-to-tmpfile';
 
 my @test_cases = (
 	# Test both with and without explicit argument separator
@@ -25,7 +25,7 @@ for my $args (@test_cases) {
 			? shell_quote($_)
 			: $$_
 			)
-		} (CMD_NAME, '--dry-run', @$args);
+		} ("bin/@{[ CMD_NAME ]}", '--dry-run', @$args);
 
 	my $output = capturex( qw(bash), qw(-c), $quoted );
 	my $result = decode_json($output);
