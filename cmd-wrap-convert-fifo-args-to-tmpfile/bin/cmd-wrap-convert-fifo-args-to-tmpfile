@@ -29,32 +29,32 @@ my $tempdir = $dry_run ? '[TEMP DIR]' : tempdir(CLEANUP => 1);
 
 exit 1 unless @original_command;
 
-# Function to convert /dev/fd/N to temporary files
-sub convert_fd_to_tempfile {
-    my ($fd, $suffix) = @_;
+# Function to convert FIFO to temporary files
+sub convert_fifo_to_tempfile {
+    my ($fifo, $suffix) = @_;
 
-    (my $clean_name = $fd) =~ s/[^A-Za-z0-9\-\.]/_/g;
+    (my $clean_name = $fifo) =~ s/[^A-Za-z0-9\-\.]/_/g;
     # Create a temporary file in the temporary directory
-    my $tempfile = File::Spec->catfile($tempdir, "fd_${clean_name}${suffix}");
+    my $tempfile = File::Spec->catfile($tempdir, "fifo_${clean_name}${suffix}");
 
     unless( $dry_run ) {
         open my $fh, '>', $tempfile or die "Failed to create temporary file $tempfile: $!";
 
         # Copy the contents of the FIFO to the temporary file
-        copy($fd, $tempfile) or die "Failed to copy $fd to $tempfile: $!";
+        copy($fifo, $tempfile) or die "Failed to copy $fifo to $tempfile: $!";
     }
 
     return $tempfile;
 }
 
-# Iterate over the command arguments and replace /dev/fd/N with temporary files
+# Iterate over the command arguments and replace FIFO with temporary files
 my @new_command;
 my $suffix_index = 0;
 foreach my $arg (@original_command) {
-    if ($arg =~ m|^/dev/fd/\d+$| || -p $arg) {
-        my $fd = $arg;
+    if (-p $arg) {
+        my $fifo = $arg;
         my $suffix = $suffixes[$suffix_index] // '';
-        push @new_command, convert_fd_to_tempfile($fd, $suffix);
+        push @new_command, convert_fifo_to_tempfile($fifo, $suffix);
         $suffix_index++ if $suffix_index < $#suffixes;
     } else {
         push @new_command, $arg;

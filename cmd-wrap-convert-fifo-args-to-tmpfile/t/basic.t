@@ -33,8 +33,8 @@ for my $args (@test_cases) {
 	is $result, {
 		command => [
 			'git', 'diff', '--word-diff', '--no-index',
-			'[TEMP DIR]/fd__dev_fd_63.txt',
-			'[TEMP DIR]/fd__dev_fd_62.yaml'
+			'[TEMP DIR]/fifo__dev_fd_63.txt',
+			'[TEMP DIR]/fifo__dev_fd_62.yaml'
 		]
 	}, "Command properly transformed for case: $quoted";
 }
