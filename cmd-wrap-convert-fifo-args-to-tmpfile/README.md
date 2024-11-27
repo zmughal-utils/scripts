@@ -1,9 +1,9 @@
-# cmd-wrap-convert-fd-args-to-tmpfile
+# cmd-wrap-convert-fifo-args-to-tmpfile
 
 Wrapper script for calling another command line that replaces all the named
-pipes (FIFOs) starting with `/dev/fd/` with actual files containing their
-content. These are typically created through a shell's process substitution
-feature; however, some programs do not handle these named pipes as input.
+pipes (FIFOs) with actual files containing their content. These are typically
+created through a shell's process substitution feature (which start with
+`/dev/fd/`); however, some programs do not handle these named pipes as input.
 
 For example, `git diff --no-index` cannot read from named pipes, unlike
 programs like `vimdiff`, and thus requires special handling in versions of Git
@@ -17,15 +17,15 @@ Example:
 function my_diff() {
     # NOTE: Currently must use `--` to ensure that remaining
     # `--opts` are not parsed.
-    cmd-wrap-convert-fd-args-to-tmpfile -- \
-        git diff --no-index --word-diff    \
-            <( cat section/$1.tex          \
-             | pandoc -f latex -t markdown \
-             | filter-fix-markdown         \
-             )                             \
-            <( cat markdown/$1.md          \
-             | filter-fix-markdown         \
-             )                             ;
+    cmd-wrap-convert-fifo-args-to-tmpfile -- \
+        git diff --no-index --word-diff      \
+            <( cat section/$1.tex            \
+             | pandoc -f latex -t markdown   \
+             | filter-fix-markdown           \
+             )                               \
+            <( cat markdown/$1.md            \
+             | filter-fix-markdown           \
+             )                               ;
 }
 
 ```
