@@ -14,8 +14,8 @@ Getopt::Long::Configure( qw(auto_help pass_through) );
 my @suffixes;
 my $dry_run;
 GetOptions(
-    "suffix=s" => \@suffixes,
-    "dry-run"  => \$dry_run,
+	"suffix=s" => \@suffixes,
+	"dry-run"  => \$dry_run,
 );
 
 # remove option list terminator
@@ -31,41 +31,41 @@ exit 1 unless @original_command;
 
 # Function to convert FIFO to temporary files
 sub convert_fifo_to_tempfile {
-    my ($fifo, $suffix) = @_;
+	my ($fifo, $suffix) = @_;
 
-    (my $clean_name = $fifo) =~ s/[^A-Za-z0-9\-\.]/_/g;
-    # Create a temporary file in the temporary directory
-    my $tempfile = File::Spec->catfile($tempdir, "fifo_${clean_name}${suffix}");
+	(my $clean_name = $fifo) =~ s/[^A-Za-z0-9\-\.]/_/g;
+	# Create a temporary file in the temporary directory
+	my $tempfile = File::Spec->catfile($tempdir, "fifo_${clean_name}${suffix}");
 
-    unless( $dry_run ) {
-        open my $fh, '>', $tempfile or die "Failed to create temporary file $tempfile: $!";
+	unless( $dry_run ) {
+		open my $fh, '>', $tempfile or die "Failed to create temporary file $tempfile: $!";
 
-        # Copy the contents of the FIFO to the temporary file
-        copy($fifo, $tempfile) or die "Failed to copy $fifo to $tempfile: $!";
-    }
+		# Copy the contents of the FIFO to the temporary file
+		copy($fifo, $tempfile) or die "Failed to copy $fifo to $tempfile: $!";
+	}
 
-    return $tempfile;
+	return $tempfile;
 }
 
 # Iterate over the command arguments and replace FIFO with temporary files
 my @new_command;
 my $suffix_index = 0;
 foreach my $arg (@original_command) {
-    if (-p $arg) {
-        my $fifo = $arg;
-        my $suffix = $suffixes[$suffix_index] // '';
-        push @new_command, convert_fifo_to_tempfile($fifo, $suffix);
-        $suffix_index++ if $suffix_index < $#suffixes;
-    } else {
-        push @new_command, $arg;
-    }
+	if (-p $arg) {
+		my $fifo = $arg;
+		my $suffix = $suffixes[$suffix_index] // '';
+		push @new_command, convert_fifo_to_tempfile($fifo, $suffix);
+		$suffix_index++ if $suffix_index < $#suffixes;
+	} else {
+		push @new_command, $arg;
+	}
 }
 
 # Execute the new command and exit with its status
 if( $dry_run ) {
-    print encode_json({ command => \@new_command }), "\n";
+	print encode_json({ command => \@new_command }), "\n";
 } else {
-    exit system(@new_command);
+	exit system(@new_command);
 }
 __END__
 
