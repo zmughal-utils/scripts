@@ -24,10 +24,10 @@ shift @ARGV if @ARGV && $ARGV[0] eq '--';
 # Read the original command from the arguments
 my @original_command = @ARGV;
 
+die "Missing command..." unless @original_command;
+
 # Create a temporary directory
 my $tempdir = $dry_run ? '[TEMP DIR]' : tempdir(CLEANUP => 1);
-
-exit 1 unless @original_command;
 
 # Function to convert FIFO to temporary files
 sub convert_fifo_to_tempfile {
