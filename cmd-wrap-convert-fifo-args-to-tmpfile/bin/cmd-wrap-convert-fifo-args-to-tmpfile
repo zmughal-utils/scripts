@@ -71,14 +71,63 @@ __END__
 
 =pod
 
+=head1 NAME
+
+cmd-wrap-convert-fifo-args-to-tmpfile - Convert FIFO arguments to temporary files before executing a command
+
 =head1 SYNOPSIS
 
 cmd-wrap-convert-fifo-args-to-tmpfile [options] command...
 
 Options:
 
-  --suffix
+  --suffix=SUFFIX   Specify suffix(es) to append to temporary filenames.
+                    Multiple --suffix options can be provided for different FIFOs
 
-  --dry-run
+  --dry-run         Don't execute command, print JSON with planned conversion
+
+  --help            Print this help message
+
+=head1 DESCRIPTION
+
+This script wraps another command, converting any FIFO (named pipe) arguments to
+temporary regular files before executing the command. This is useful when working
+with programs that don't handle FIFOs correctly.
+
+Each FIFO argument is copied to a temporary file, which is then passed to the
+wrapped command instead of the original FIFO. The temporary files are automatically
+cleaned up after the wrapped command exits.
+
+=head1 OPTIONS
+
+=over 4
+
+=item B<--suffix>=I<SUFFIX>
+
+Append the specified suffix to temporary filenames. Can be specified multiple times
+to use different suffixes for different FIFOs in order of appearance.
+
+=item B<--dry-run>
+
+Instead of executing the command, output a JSON object showing how the command
+would be transformed. Useful for testing.
+
+=item B<--help>
+
+Print usage information.
+
+=back
+
+=head1 EXIT STATUS
+
+Returns the exit status of the wrapped command, or 0 for C<--dry-run>.
+
+=head1 EXAMPLES
+
+  # Convert .fifo to temporary file before running command
+  cmd-wrap-convert-fifo-args-to-tmpfile cat <( cmd )
+
+  # Use different suffixes for multiple FIFOs
+  cmd-wrap-convert-fifo-args-to-tmpfile --suffix=.in --suffix=.out cmd <( cat input | shuf ) <( cat output | shuf )
 
 =cut
